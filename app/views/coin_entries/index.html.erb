@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Coin Entries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>City</th>
+      <th>Region</th>
+      <th>Country</th>
+      <th>Serial number</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @coin_entries.each do |coin_entry| %>
+      <tr>
+        <td><%= coin_entry.city %></td>
+        <td><%= coin_entry.region %></td>
+        <td><%= coin_entry.country %></td>
+        <td><%= coin_entry.serial_number %></td>
+        <td><%= link_to 'Show', coin_entry %></td>
+        <td><%= link_to 'Edit', edit_coin_entry_path(coin_entry) %></td>
+        <td><%= link_to 'Destroy', coin_entry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Coin entry', new_coin_entry_path %>

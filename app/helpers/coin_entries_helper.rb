@@ -1,0 +1,2 @@
+module CoinEntriesHelper
+end

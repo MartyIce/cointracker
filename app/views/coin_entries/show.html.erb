@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>City:</strong>
+  <%= @coin_entry.city %>
+</p>
+
+<p>
+  <strong>Region:</strong>
+  <%= @coin_entry.region %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @coin_entry.country %>
+</p>
+
+<p>
+  <strong>Serial number:</strong>
+  <%= @coin_entry.serial_number %>
+</p>
+
+<%= link_to 'Edit', edit_coin_entry_path(@coin_entry) %> |
+<%= link_to 'Back', coin_entries_path %>
