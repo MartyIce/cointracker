@@ -11,13 +11,15 @@
     </div>
   <% end %>
 
+  <div class="geo_location"></div>
+
   <div class="field">
     <%= f.label :city %><br>
-    <%= f.text_field :city %>
+    <%= f.text_field :city, class: 'location_update'%>
   </div>
   <div class="field">
     <%= f.label :region %><br>
-    <%= f.text_field :region %>
+    <%= f.text_field :region, class: 'location_update'%>
   </div>
   <div class="field">
     <%= f.label :country %><br>

@@ -1,4 +1,9 @@
+require 'geokit'
+
 class CoinEntriesController < ApplicationController
+
+  include Geokit::Geocoders
+
   before_action :set_coin_entry, only: [:show, :edit, :update, :destroy]
 
   # GET /coin_entries
@@ -14,6 +19,8 @@ class CoinEntriesController < ApplicationController
 
   # GET /coin_entries/new
   def new
+    coords = MultiGeocoder.geocode("Decatur, IL")
+
     @coin_entry = CoinEntry.new
   end
 
@@ -59,6 +66,11 @@ class CoinEntriesController < ApplicationController
       format.html { redirect_to coin_entries_url, notice: 'Coin entry was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def location_update
+    coords = MultiGeocoder.geocode(params[:city] + "," + params[:region] + "," + params[:country])
+    render json: coords
   end
 
   private
