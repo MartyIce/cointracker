@@ -1,29 +1,3 @@
-<script>
-
-function update_geo(data) {
-	console.log(data)
-}
-
-$(document).ready(function () {
-$(".location_update").bind('blur', function()
-	{
-	  data = {
-	  	city: $( "input:text[id=coin_entry_city]" ).val(),
-	  	region: $( "input:text[id=coin_entry_region]" ).val(),
-	  	country: $( "input:text[id=coin_entry_country]" ).val()
-	  }
-      $.ajax({
-        type: "POST",
-        url: "coin_entries/location_update",
-        data: data,
-        success: update_geo
-      });
-	  return true;
-    });
-});
-
-</script>
-
 <h1>New Coin Entry</h1>
 
 <%= render 'form' %>

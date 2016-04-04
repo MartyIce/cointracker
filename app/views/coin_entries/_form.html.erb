@@ -1,35 +1,95 @@
-<%= form_for(@coin_entry) do |f| %>
-  <% if @coin_entry.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@coin_entry.errors.count, "error") %> prohibited this coin_entry from being saved:</h2>
+<script>
 
-      <ul>
-      <% @coin_entry.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+var map;
+
+function initMap() {
+
+}
+function update_geo(data) {
+  console.log(data)
+  $(".geo_location")[0].innerText = data.lat + ", " + data.lng
+
+  var coords = {lat: data.lat, lng: data.lng};
+  map = new google.maps.Map(document.getElementById('map-canvas'), {
+    center: coords,
+    zoom: 8
+  });
+
+  createMarker(coords, map, "here")
+}
+
+var marker;
+function createMarker(coords, map, title){
+  marker = new google.maps.Marker({
+    position: coords,
+    map: map,
+    title: title
+  });
+}
+
+$(document).ready(function () {
+$(".location_update").bind('blur', function()
+  {
+    data = {
+      city: $( "input:text[id=coin_entry_city]" ).val(),
+      region: $( "input:text[id=coin_entry_region]" ).val(),
+      country: $( "input:text[id=coin_entry_country]" ).val()
+    }
+      $.ajax({
+        type: "POST",
+        url: "coin_entries/location_update",
+        data: data,
+        success: update_geo
+      });
+    return true;
+    });
+});
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwDgeRGT4ZgucWWQSnlyOIo-Kbyy3gSC0&callback=initMap"
+    async defer></script>
+
+<div class="input_section">    
+
+  <%= form_for(@coin_entry) do |f| %>
+    <% if @coin_entry.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@coin_entry.errors.count, "error") %> prohibited this coin_entry from being saved:</h2>
+
+        <ul>
+        <% @coin_entry.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :city %><br>
+      <%= f.text_field :city, class: 'location_update'%>
     </div>
-  <% end %>
-
-  <div class="geo_location"></div>
-
-  <div class="field">
-    <%= f.label :city %><br>
-    <%= f.text_field :city, class: 'location_update'%>
-  </div>
-  <div class="field">
-    <%= f.label :region %><br>
-    <%= f.text_field :region, class: 'location_update'%>
-  </div>
-  <div class="field">
-    <%= f.label :country %><br>
-    <%= f.text_field :country %>
-  </div>
-  <div class="field">
-    <%= f.label :serial_number %><br>
-    <%= f.text_field :serial_number %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+    <div class="field">
+      <%= f.label :region %><br>
+      <%= f.text_field :region, class: 'location_update'%>
+    </div>
+    <div class="field">
+      <%= f.label :country %><br>
+      <%= f.text_field :country %>
+    </div>
+    <div class="field">
+      <%= f.label :serial_number %><br>
+      <%= f.text_field :serial_number %>
+    </div>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
   </div>
 <% end %>
+
+<div id="map-container">
+  <div class="geo_location"></div>
+  <div id="map-canvas"></div>
+</div>
+
+

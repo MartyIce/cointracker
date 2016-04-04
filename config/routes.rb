@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :coin_entries
   
-  root 'coin_entries#new'
+  root 'admin#main'
 
   post 'coin_entries/location_update' => 'coin_entries#location_update'
 

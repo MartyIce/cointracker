@@ -1,0 +1,30 @@
+<script>
+
+function update_entries(data) {
+	table_generator(data, ['Date'], ['created_at'])
+};
+
+$(document).ready(function () {
+$(".coin_update").bind('blur', function()
+  {
+    data = {
+      serial_number: $( "input:text[id=serial_number]" ).val(),
+    }
+      $.ajax({
+        type: "GET",
+        url: "coin_entries/find_by_serial_number",
+        data: data,
+        success: update_entries
+      });
+    return true;
+    });
+});
+
+</script>
+
+<h1>Select Coin</h1>
+
+    <div class="field">
+      <%= label(:coins, "Select Coin") %><br>
+      <%= collection_select(:serial_number, 0, Coin.all, :id, :serial_number) %>
+    </div>
