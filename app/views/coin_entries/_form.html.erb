@@ -37,7 +37,7 @@ $(".location_update").bind('blur', function()
     }
       $.ajax({
         type: "POST",
-        url: "coin_entries/location_update",
+        url: "location_update",
         data: data,
         success: update_geo
       });

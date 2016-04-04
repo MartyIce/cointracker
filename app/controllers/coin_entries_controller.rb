@@ -4,7 +4,7 @@ class CoinEntriesController < ApplicationController
 
   include Geokit::Geocoders
 
-  before_action :set_coin_entry, only: [:show, :edit, :update, :destroy]
+  before_action :set_coin_entry, only: [:show, :edit, :update, :destroy], except: [:find_by_serial_number]
 
   # GET /coin_entries
   # GET /coin_entries.json
@@ -74,7 +74,7 @@ class CoinEntriesController < ApplicationController
   end
 
   def find_by_serial_number
-    render json: CoinEntries.where("serial_number=?", params[:serial_number])
+    render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s)
   end
 
   private

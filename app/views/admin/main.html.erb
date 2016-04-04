@@ -1,23 +1,25 @@
 <script>
 
 function update_entries(data) {
-	table_generator(data, ['Date'], ['created_at'])
+  var table = $('<table></table>');
+  for(i=0; i<data.length; i++){
+      var row = $('<tr></tr>').text(data[i].city);
+      table.append(row);
+  }
+
+  $('#coin_entries').html(table);
 };
 
 $(document).ready(function () {
-$(".coin_update").bind('blur', function()
+$("#serial_number_0").bind('change', function()
   {
-    data = {
-      serial_number: $( "input:text[id=serial_number]" ).val(),
-    }
-      $.ajax({
-        type: "GET",
-        url: "coin_entries/find_by_serial_number",
-        data: data,
-        success: update_entries
-      });
-    return true;
+    $.ajax({
+      type: "GET",
+      url: "coin_entries/find_by_serial_number/" + $( "select[id=serial_number_0] option:selected" ).text(),
+      success: update_entries
     });
+  return true;
+  });
 });
 
 </script>
@@ -27,4 +29,7 @@ $(".coin_update").bind('blur', function()
     <div class="field">
       <%= label(:coins, "Select Coin") %><br>
       <%= collection_select(:serial_number, 0, Coin.all, :id, :serial_number) %>
+    </div>
+
+    <div id="coin_entries">
     </div>

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'admin#main'
 
   post 'coin_entries/location_update' => 'coin_entries#location_update'
+  get 'coin_entries/find_by_serial_number/:id' => 'coin_entries#find_by_serial_number'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
