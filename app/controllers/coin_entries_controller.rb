@@ -31,11 +31,12 @@ class CoinEntriesController < ApplicationController
   # POST /coin_entries
   # POST /coin_entries.json
   def create
+    byebug
     @coin_entry = CoinEntry.new(coin_entry_params)
 
     respond_to do |format|
       if @coin_entry.save
-        format.html { redirect_to @coin_entry, notice: 'Coin entry was successfully created.' }
+        format.html { redirect_to '/' }
         format.json { render :show, status: :created, location: @coin_entry }
       else
         format.html { render :new }
@@ -74,7 +75,7 @@ class CoinEntriesController < ApplicationController
   end
 
   def find_by_serial_number
-    render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s)
+    render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s.rjust(3, '0'))
   end
 
   private
