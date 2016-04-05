@@ -14,12 +14,3 @@
  *= require_self
  */
 
-div.add_new {
-	padding: 25px;
-	border-radius: 44px 44px 44px 44px;
-	-moz-border-radius: 44px 44px 44px 44px;
-	-webkit-border-radius: 44px 44px 44px 44px;
-	border: 2px solid #000000;
-    width: 130px;
-    float: left;
-}

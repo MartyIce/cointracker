@@ -19,3 +19,16 @@ end
 1.upto(250) do |i|
    Coin.create(:serial_number => i.to_s.rjust(3, '0'))
 end
+
+cities = ["Decatur", "Los Angeles", "New York", "Pittsburgh", "Minneapolis", "Miami", "Denver", "Portland", "Boise", "Austin",
+"Phoenix", "Cheyenne", "Kansas City", "Nasville", "Atlanta"]
+states = ["IL", "CA", "NY", "PA", "MN", "FL", "CO", "OR", "ID", "TX",
+"AZ", "WY", "KS", "TN", "GA"]
+
+Coin.all.each do |c|	
+	1.upto(rand(10)) do |i|
+		arrayInd = rand(cities.length)
+	   CoinEntry.create(:serial_number => c.serial_number, :city => cities[arrayInd], :region => states[arrayInd], :country => 'USA')
+	end
+   CoinEntry.create(:serial_number => c.serial_number, :city => 'Decatur', :region => 'IL', :country => 'USA')
+end

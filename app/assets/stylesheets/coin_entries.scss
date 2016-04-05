@@ -8,17 +8,31 @@ div.input_section {
 div.geo_location {
     margin-left: 25%;
 }
-#map-container {
-    margin-left: 25%;
-   height: 250px;
-   width: 250px;
-   border-radius: 16px 16px;
-   border-color: #fff;
-   border-style: solid;
-   box-shadow: 2px 2px 10px #B1B1B1;
-   margin-top: 25px;
-   border-width: 7px;
- }
+
 #map-canvas {
 	height: 200px;
+}
+
+$border-rad: 4px;
+
+div.edit_fields {
+  float: left;
+  width: 130px;
+}
+div.cities {
+  float: left;
+  width: 130px;
+}
+div.map {
+  float: left;
+  width: 340px;
+}
+div.section_box {
+  margin: 10px;
+  padding: 25px;
+  border-radius: $border-rad $border-rad $border-rad $border-rad;
+  -moz-border-radius: $border-rad $border-rad $border-rad $border-rad;
+  -webkit-border-radius: $border-rad $border-rad $border-rad $border-rad;
+  border: 2px solid #000000;
+  height: 200px;
 }

@@ -1,28 +1,110 @@
 <script>
 
+var map;
+
+function initMap() {
+  var latlng = new google.maps.LatLng(37.09024, -95.712891);
+  map = new google.maps.Map(document.getElementById('map-canvas'), {
+    zoom: 3,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
+function update_geo(coin_entry) {
+  // console.log(data)
+  // $(".geo_location")[0].innerText = data.lat + ", " + data.lng
+
+  var coords = {lat: coin_entry.lat, lng: coin_entry.lng};
+  createMarker(coin_entry, coords, map, coin_entry.city)
+}
+var marker;
+var markers = [];
+function createMarker(coin_entry, coords, map, title){
+  marker = new google.maps.Marker({
+    position: coords,
+    map: map,
+    title: title
+  });
+  marker.coords = coords;
+  marker.coin_entry = coin_entry
+  markers.push(marker);
+}
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
+
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setMapOnAll(null);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}
+
 function update_entries(data) {
+  clearMarkers();
   var table = $('<table></table>');
   for(i=0; i<data.length; i++){
       var row = $('<tr></tr>').text(data[i].city);
       table.append(row);
+
+      var match = markers.filter(function (entry) 
+        { return entry.coin_entry.city === data[i].city; });
+      if(match.length == 0)
+        $.ajax({
+          type: "POST",
+          url: "coin_entries/location_update",
+          data: data[i],
+          success: update_geo
+        });
+      else
+        match[0].setMap(map);
   }
 
   $('#coin_entries').html(table);
 };
 
-$(document).ready(function () {
-$("#coin_entry_serial_number").bind('change', function()
-  {
-    $.ajax({
-      type: "GET",
-      url: "coin_entries/find_by_serial_number/" + $( "select[id=coin_entry_serial_number] option:selected" ).text(),
-      success: update_entries
-    });
-  return true;
+function refreshCities()
+{
+  $("[name='coin_entry[city]']").val('');
+  $("[name='coin_entry[region]']").val('');
+
+  $.ajax({
+    type: "GET",
+    url: "coin_entries/find_by_serial_number/" + $( "select[id=coin_entry_serial_number] option:selected" ).text(),
+    success: update_entries
   });
+return true;
+}
+
+$(document).ready(function () {
+  $("#coin_entry_serial_number").bind('change', refreshCities);
+  refreshCities();
+});
+
+$(document).on("submit", "form", function (e) {
+    var valuesToSubmit = $(this).serialize();
+    $.ajax({
+        type: "POST",
+        url: $(this).attr('action'), //sumbits it to the given url of the form
+        data: valuesToSubmit,
+        dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
+    }).success(function(json){
+      refreshCities();
+    });
+    return false; // prevents normal behaviour
 });
 
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwDgeRGT4ZgucWWQSnlyOIo-Kbyy3gSC0&callback=initMap"
+    async defer></script>
 
 <h1>Select Coin</h1>
 
@@ -32,7 +114,8 @@ $("#coin_entry_serial_number").bind('change', function()
       <%= collection_select(:coin_entry, :serial_number, Coin.all, :serial_number, :serial_number) %>
     </div>
 
-    <div class="add_new">    
+    <div>
+    <div class="edit_fields section_box">    
 
         <% if @coin_entry.errors.any? %>
           <div id="error_explanation">
@@ -62,8 +145,17 @@ $("#coin_entry_serial_number").bind('change', function()
           <%= f.submit %>
         </div>
       </div>
-  </div>
     <% end %>
 
-    <div id="coin_entries">
+    <div id="coin_entries" class="cities section_box">
     </div>
+
+      <div style="clear: both;"></div>
+
+    <div id="map-container" class="map section_box">
+      <div id="map-canvas"></div>
+    </div>
+
+
+      <div style="clear: both;"></div>
+  </div>

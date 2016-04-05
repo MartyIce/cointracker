@@ -31,7 +31,6 @@ class CoinEntriesController < ApplicationController
   # POST /coin_entries
   # POST /coin_entries.json
   def create
-    byebug
     @coin_entry = CoinEntry.new(coin_entry_params)
 
     respond_to do |format|
