@@ -63,7 +63,7 @@ function update_entries(data) {
       table.append( '<tr><td align="right">' + 
         location +
         ':</td><td>' + 
-        $.format.date(data[i].created_at, "dd/MM/yyyy") +
+        $.format.date(data[i].created_at, "MM/dd/yyyy") +
         '</td></tr>' );
 
       var match = markers.filter(function (entry) 
