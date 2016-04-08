@@ -1,3 +1,6 @@
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-dateFormat/1.0/jquery.dateFormat.js"></script>
 <script>
 
 var map;
@@ -52,8 +55,16 @@ function update_entries(data) {
   clearMarkers();
   var table = $('<table></table>');
   for(i=0; i<data.length; i++){
-      var row = $('<tr></tr>').text(data[i].city);
-      table.append(row);
+
+      var location = data[i].city;
+      if(location.length > 0 && data[i].region.length > 0)
+        location += ', ' + data[i].region;
+
+      table.append( '<tr><td align="right">' + 
+        location +
+        ':</td><td>' + 
+        $.format.date(data[i].created_at, "dd/MM/yyyy") +
+        '</td></tr>' );
 
       var match = markers.filter(function (entry) 
         { return entry.coin_entry.city === data[i].city; });
@@ -87,6 +98,7 @@ return true;
 $(document).ready(function () {
   $("#coin_entry_serial_number").bind('change', refreshCities);
   refreshCities();
+    $( "#created_at_picker" ).datepicker();
 });
 
 $(document).on("submit", "form", function (e) {
@@ -101,7 +113,6 @@ $(document).on("submit", "form", function (e) {
     });
     return false; // prevents normal behaviour
 });
-
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwDgeRGT4ZgucWWQSnlyOIo-Kbyy3gSC0&callback=initMap"
     async defer></script>
@@ -140,6 +151,10 @@ $(document).on("submit", "form", function (e) {
         <div class="field">
           <%= f.label :country %><br>
           <%= f.text_field :country %>
+        </div>
+        <div class="field">
+          <%= f.label :created_at %><br>
+          <%= f.text_field :created_at, id: 'created_at_picker' %>
         </div>
         <div class="actions">
           <%= f.submit %>

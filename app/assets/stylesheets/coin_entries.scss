@@ -6,7 +6,7 @@ div.input_section {
     float: left;
 }
 div.geo_location {
-    margin-left: 25%;
+    margin-left: 40%;
 }
 
 #map-canvas {
@@ -21,11 +21,13 @@ div.edit_fields {
 }
 div.cities {
   float: left;
-  width: 130px;
+  width: 200px;
+  overflow: auto;
+  overflow-x:hidden;
 }
 div.map {
   float: left;
-  width: 340px;
+  width: 404px;
 }
 div.section_box {
   margin: 10px;
