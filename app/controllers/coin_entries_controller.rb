@@ -69,12 +69,28 @@ class CoinEntriesController < ApplicationController
   end
 
   def location_update
-    coords = MultiGeocoder.geocode(params[:city] + "," + params[:region] + "," + params[:country])
-    render json: coords
+    retVal = []
+    params["cities"].each do |k, c|
+      coords = MultiGeocoder.geocode(c[:city] + "," + c[:region] + "," + c[:country])
+      retVal.push(coords)
+    end
+    render json: retVal
   end
 
   def find_by_serial_number
     render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s.rjust(3, '0'))
+  end
+
+  def find_last_for_each
+    byCity = CoinEntry.find_by_sql "SELECT serial_number, max(id) as id from coin_entries group by serial_number"
+    ids = []
+    byCity.each do |bc|
+      if(bc.serial_number != nil)
+        ids.push(bc.id)
+      end
+    end
+    coins = CoinEntry.find ids
+    render json: coins.sort_by{|c| c[:serial_number]}
   end
 
   private

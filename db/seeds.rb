@@ -21,7 +21,7 @@ end
 end
 
 cities = ["Decatur", "Los Angeles", "New York", "Pittsburgh", "Minneapolis", "Miami", "Denver", "Portland", "Boise", "Austin",
-"Phoenix", "Cheyenne", "Kansas City", "Nasville", "Atlanta"]
+"Phoenix", "Cheyenne", "Kansas City", "Nashville", "Atlanta"]
 states = ["IL", "CA", "NY", "PA", "MN", "FL", "CO", "OR", "ID", "TX",
 "AZ", "WY", "KS", "TN", "GA"]
 
@@ -30,5 +30,4 @@ Coin.all.each do |c|
 		arrayInd = rand(cities.length)
 	   CoinEntry.create(:serial_number => c.serial_number, :city => cities[arrayInd], :region => states[arrayInd], :country => 'USA')
 	end
-   CoinEntry.create(:serial_number => c.serial_number, :city => 'Decatur', :region => 'IL', :country => 'USA')
 end
