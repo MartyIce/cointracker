@@ -24,11 +24,11 @@ function update_geo(coin_entries) {
 }
 var marker;
 var markers = [];
-function createMarker(coin_entry, coords, map, title){
+function createMarker(coin_entry, coords, map, label){
   marker = new google.maps.Marker({
     position: coords,
     map: map,
-    title: title
+    label: label
   });
   marker.coords = coords;
   marker.coin_entry = coin_entry
@@ -53,10 +53,14 @@ function deleteMarkers() {
   markers = [];
 }
 
+var flightPath;
 function update_entries(data) {
   clearMarkers();
+  if(flightPath)
+    flightPath.setMap(null);
   var table = $('<table></table>');
   var citiesToRetrieve = [];
+  var flightPlanCoords = [];
   for(i=0; i<data.length; i++){
 
       var location = data[i].city;
@@ -92,9 +96,26 @@ function update_entries(data) {
           citiesToRetrieve.push(data[i]);
       }
       else
+      {
         match[0].setMap(map);
+        flightPlanCoords.push(match[0].coords);
+      }
+
   }
   $('#coin_entries').html(table);
+
+  if(currentMap === 'mapCurrentCoin')
+  {
+    flightPath = new google.maps.Polyline({
+      path: flightPlanCoords,
+      geodesic: false,
+      strokeColor: '#FF0000',
+      strokeOpacity: 1.0,
+      strokeWeight: 2
+    });
+
+    flightPath.setMap(map);
+  }
 
   if(citiesToRetrieve.length > 0)
     $.ajax({

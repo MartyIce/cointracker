@@ -19,8 +19,6 @@ class CoinEntriesController < ApplicationController
 
   # GET /coin_entries/new
   def new
-    coords = MultiGeocoder.geocode("Decatur, IL")
-
     @coin_entry = CoinEntry.new
   end
 
@@ -71,14 +69,21 @@ class CoinEntriesController < ApplicationController
   def location_update
     retVal = []
     params["cities"].each do |k, c|
-      coords = MultiGeocoder.geocode(c[:city] + "," + c[:region] + "," + c[:country])
-      retVal.push(coords)
+      retVal.push(coords_for_city(c))
     end
     render json: retVal
   end
 
+  def coords_for_city(c) 
+    key = c[:city] + "," + c[:region] + "," + c[:country];
+    Rails.cache.fetch(key, expires_in: 12.hours) do
+      byebug
+      MultiGeocoder.geocode(key)
+    end
+  end
+
   def find_by_serial_number
-    render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s.rjust(3, '0'))
+    render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s.rjust(3, '0')).sort_by{|c| c[:created_at]}
   end
 
   def find_last_for_each

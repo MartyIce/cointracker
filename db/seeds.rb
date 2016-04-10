@@ -16,6 +16,10 @@ ActiveRecord::Base.connection.tables.each do |table|
   # ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
 end
 
+def time_rand from = 0.0, to = Time.now
+  Time.at(from + rand * (to.to_f - from.to_f))
+end
+
 1.upto(250) do |i|
    Coin.create(:serial_number => i.to_s.rjust(3, '0'))
 end
@@ -28,6 +32,15 @@ states = ["IL", "CA", "NY", "PA", "MN", "FL", "CO", "OR", "ID", "TX",
 Coin.all.each do |c|	
 	1.upto(rand(10)) do |i|
 		arrayInd = rand(cities.length)
-	   CoinEntry.create(:serial_number => c.serial_number, :city => cities[arrayInd], :region => states[arrayInd], :country => 'USA')
+	   CoinEntry.create(
+      :serial_number => c.serial_number, 
+      :city => cities[arrayInd], 
+      :region => states[arrayInd], 
+      :country => 'USA',
+      :created_at => time_rand(Time.local(2016, 4, 1))
+    )
 	end
 end
+
+
+
