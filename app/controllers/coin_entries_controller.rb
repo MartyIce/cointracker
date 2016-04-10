@@ -77,7 +77,6 @@ class CoinEntriesController < ApplicationController
   def coords_for_city(c) 
     key = c[:city] + "," + c[:region] + "," + c[:country];
     Rails.cache.fetch(key, expires_in: 12.hours) do
-      byebug
       MultiGeocoder.geocode(key)
     end
   end
