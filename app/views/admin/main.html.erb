@@ -29,6 +29,12 @@ function update_geo(coin_entries) {
 }
 
 function markerSelected(marker) {
+
+  allMarkers.forEach(function(m) {
+    m.setAnimation(null);
+  });
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+
   $('.cityname').css('color', 'black');
   var classname = getEntryClassname(marker.coin_entry);
   $('.' + classname).css('color', 'blue');
@@ -98,13 +104,8 @@ function highlightMarker(classname) {
     m.setAnimation(null);
   });
   var markers = findMatchingMarkersByClassname(classname);
-  var lastMarker = null;
-  markers.forEach(function(m) {
-    m.setAnimation(google.maps.Animation.BOUNCE);
-    lastMarker = m;
-  });
-  if(lastMarker != null)
-    markerSelected(lastMarker)
+  if(markers.length > 0)
+    markerSelected(markers[0])
 }
 function update_entries(data) {
 
