@@ -62,7 +62,14 @@ function deleteMarkers() {
   clearMarkers();
   allMarkers = [];
 }
-
+function findMatchingMarkersByClassname(classname) {
+  var match = allMarkers.filter(function (entry) 
+    { 
+      return classname === getEntryClassname(entry.coin_entry); 
+    }
+  );
+  return match;
+}
 function findMatchingMarker(currentEntry) {
   var match = allMarkers.filter(function (entry) 
     { 
@@ -86,6 +93,19 @@ function getEntryClassname(entry) {
     classname += '_' + entry.state;
   return classname.replace(' ', '_').toUpperCase();
 }
+function highlightMarker(classname) {
+  allMarkers.forEach(function(m) {
+    m.setAnimation(null);
+  });
+  var markers = findMatchingMarkersByClassname(classname);
+  var lastMarker = null;
+  markers.forEach(function(m) {
+    m.setAnimation(google.maps.Animation.BOUNCE);
+    lastMarker = m;
+  });
+  if(lastMarker != null)
+    markerSelected(lastMarker)
+}
 function update_entries(data) {
 
   currentEntries = data;
@@ -106,19 +126,32 @@ function update_entries(data) {
 
       switch(currentMap) {
         case "mapCurrentCoin":
-          table.append( '<tr class="cityname ' + classname + '"><td align="right">' + 
+          table.append( '<tr ' +
+            'onclick="highlightMarker(\'' + 
+            classname + 
+            '\')" class="cityname ' + 
+            classname + 
+            '"><td align="right">' + 
             location +
             ':</td><td>' + 
             $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
             '</td></tr>' );
           break;
         case "mapAllCoins":
-          table.append( '<tr class="cityname ' + classname + '"><td align="right">' + 
+          table.append( '<tr ' + 
+            'onclick="highlightMarker(\'' + 
+            classname + 
+            '\')" class="cityname ' + 
+            classname + '"><td align="right">' + 
             currentEntry.serial_number +
             ':</td><td>' + 
             $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
             '</td></tr>' );
-          table.append( '<tr class="cityname ' + classname + '"><td align="right"></td><td>' + 
+          table.append( '<tr ' +
+            'onclick="highlightMarker(\'' + 
+            classname + 
+            '\')" class="cityname ' + 
+            classname + '"><td align="right"></td><td>' + 
             location +
             '</td></tr>' );
           break;
