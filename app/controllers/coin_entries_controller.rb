@@ -75,7 +75,7 @@ class CoinEntriesController < ApplicationController
   end
 
   def coords_for_city(c) 
-    key = c[:city] + "," + c[:region] + "," + c[:country];
+    key = c[:city] + "," + c[:state] + "," + c[:country];
     Rails.cache.fetch(key, expires_in: 12.hours) do
       MultiGeocoder.geocode(key)
     end
@@ -105,6 +105,6 @@ class CoinEntriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def coin_entry_params
-      params.require(:coin_entry).permit(:city, :region, :country, :serial_number, :created_at)
+      params.require(:coin_entry).permit(:city, :state, :country, :serial_number, :created_at)
     end
 end

@@ -32,7 +32,7 @@ $(".location_update").bind('blur', function()
   {
     data = {
       city: $( "input:text[id=coin_entry_city]" ).val(),
-      region: $( "input:text[id=coin_entry_region]" ).val(),
+      state: $( "input:text[id=coin_entry_state]" ).val(),
       country: $( "input:text[id=coin_entry_country]" ).val()
     }
       $.ajax({
@@ -70,8 +70,8 @@ $(".location_update").bind('blur', function()
       <%= f.text_field :city, class: 'location_update'%>
     </div>
     <div class="field">
-      <%= f.label :region %><br>
-      <%= f.text_field :region, class: 'location_update'%>
+      <%= f.label :state %><br>
+      <%= f.text_field :state, class: 'location_update'%>
     </div>
     <div class="field">
       <%= f.label :country %><br>

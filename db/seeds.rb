@@ -35,7 +35,7 @@ Coin.all.each do |c|
 	   CoinEntry.create(
       :serial_number => c.serial_number, 
       :city => cities[arrayInd], 
-      :region => states[arrayInd], 
+      :state => states[arrayInd], 
       :country => 'USA',
       :created_at => time_rand(Time.local(2016, 4, 1))
     )

@@ -6,7 +6,7 @@
   <thead>
     <tr>
       <th>City</th>
-      <th>Region</th>
+      <th>state</th>
       <th>Country</th>
       <th>Serial number</th>
       <th colspan="3"></th>
@@ -17,7 +17,7 @@
     <% @coin_entries.each do |coin_entry| %>
       <tr>
         <td><%= coin_entry.city %></td>
-        <td><%= coin_entry.region %></td>
+        <td><%= coin_entry.state %></td>
         <td><%= coin_entry.country %></td>
         <td><%= coin_entry.serial_number %></td>
         <td><%= link_to 'Show', coin_entry %></td>

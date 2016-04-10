@@ -2,12 +2,12 @@
 
 one:
   city: MyString
-  region: MyString
+  state: MyString
   country: MyString
   serial_number: MyString
 
 two:
   city: MyString
-  region: MyString
+  state: MyString
   country: MyString
   serial_number: MyString

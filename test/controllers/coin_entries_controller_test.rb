@@ -18,7 +18,7 @@ class CoinEntriesControllerTest < ActionController::TestCase
 
   test "should create coin_entry" do
     assert_difference('CoinEntry.count') do
-      post :create, coin_entry: { city: @coin_entry.city, country: @coin_entry.country, region: @coin_entry.region, serial_number: @coin_entry.serial_number }
+      post :create, coin_entry: { city: @coin_entry.city, country: @coin_entry.country, state: @coin_entry.state, serial_number: @coin_entry.serial_number }
     end
 
     assert_redirected_to coin_entry_path(assigns(:coin_entry))
@@ -35,7 +35,7 @@ class CoinEntriesControllerTest < ActionController::TestCase
   end
 
   test "should update coin_entry" do
-    patch :update, id: @coin_entry, coin_entry: { city: @coin_entry.city, country: @coin_entry.country, region: @coin_entry.region, serial_number: @coin_entry.serial_number }
+    patch :update, id: @coin_entry, coin_entry: { city: @coin_entry.city, country: @coin_entry.country, state: @coin_entry.state, serial_number: @coin_entry.serial_number }
     assert_redirected_to coin_entry_path(assigns(:coin_entry))
   end
 

@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20160404041429) do
 
   create_table "coin_entries", force: :cascade do |t|
     t.string   "city"
-    t.string   "region"
+    t.string   "state"
     t.string   "country"
     t.string   "serial_number"
     t.datetime "created_at",    null: false
