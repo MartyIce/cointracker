@@ -81,11 +81,15 @@ function findMatchingMarker(currentEntry) {
     { 
       var ce1 = entry.coin_entry;
       var ce2 = currentEntry;
-      var c1 = ce1.city.toUpperCase();
-      var c2 = ce2.city.toUpperCase();
-      var s1 = ce1.state.toUpperCase();
-      var s2 = ce2.state.toUpperCase();
-      return c1 === c2 && s1 === s2; 
+      if(ce1.city && ce1.state) {
+        var c1 = ce1.city.toUpperCase();
+        var c2 = ce2.city.toUpperCase();
+        var s1 = ce1.state.toUpperCase();
+        var s2 = ce2.state.toUpperCase();
+        return c1 === c2 && s1 === s2; 
+      }
+      else
+        return false;
     }
   );
   if(match.length > 0)
@@ -95,9 +99,12 @@ function findMatchingMarker(currentEntry) {
 }
 function getEntryClassname(entry) {
   var classname = entry.city
-  if(classname.length > 0 && entry.state.length > 0)
+  if(classname && classname.length > 0 && entry.state.length > 0)
     classname += '_' + entry.state;
-  return classname.replace(' ', '_').toUpperCase();
+  if(classname)
+    return classname.replace(' ', '_').toUpperCase();
+  else
+    return null;
 }
 function highlightMarker(classname) {
   allMarkers.forEach(function(m) {
@@ -208,10 +215,12 @@ function updateFlightPath() {
       });
       currentEntries.forEach(function(entry) {
       var marker = findMatchingMarker(entry)
-      if(marker.label === '')
-        marker.label = index.toString();
-      marker.setMap(map);
-      index++;
+      if(marker) {
+        if(marker.label === '')
+          marker.label = index.toString();
+        marker.setMap(map);
+        index++;
+      }
     });
       break;
     case "mapAllCoins":
@@ -259,6 +268,7 @@ function mapAllCoins() {
 }
 
 $(document).on("submit", "form", function (e) {
+    $("#validation-errors").hide();
     var valuesToSubmit = $(this).serialize();
     $.ajax({
         type: "POST",
@@ -267,6 +277,9 @@ $(document).on("submit", "form", function (e) {
         dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
     }).success(function(json){
       refreshCities();
+    }).error(function(json) {
+      $("#validation-errors").show();
+      $("#validation-errors").text(" - " + json.responseJSON.city[0]);
     });
     return false; // prevents normal behaviour
 });
@@ -284,26 +297,14 @@ $(document).on("submit", "form", function (e) {
 
     <div>
     <div class="edit_fields section_box">    
-
-        <% if @coin_entry.errors.any? %>
-          <div id="error_explanation">
-            <h2><%= pluralize(@coin_entry.errors.count, "error") %> prohibited this coin_entry from being saved:</h2>
-
-            <ul>
-            <% @coin_entry.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-            </ul>
-          </div>
-        <% end %>
-
-        <div class="field">
-          <%= f.label :city %><br>
-          <%= f.text_field :city, class: 'location_update'%>
+        
+        <div class="field" id="city">
+          <%= f.label :city %><span class="field" id="validation-errors" style="display:none; color: red"></span><br>
+          <%= f.text_field :city, class: 'location_update', :required => true%>
         </div>
         <div class="field">
           <%= f.label :state %><br>
-          <%= f.text_field :state, class: 'location_update'%>
+          <%= f.text_field :state, class: 'location_update', :required => true%>
         </div>
         <div class="field">
           <%= f.label :country %><br>

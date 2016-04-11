@@ -29,15 +29,27 @@ class CoinEntriesController < ApplicationController
   # POST /coin_entries
   # POST /coin_entries.json
   def create
-    @coin_entry = CoinEntry.new(coin_entry_params)
+    @coords = coords_for_city(coin_entry_params);
 
-    respond_to do |format|
-      if @coin_entry.save
-        format.html { redirect_to '/' }
-        format.json { render :show, status: :created, location: @coin_entry }
-      else
-        format.html { render :new }
-        format.json { render json: @coin_entry.errors, status: :unprocessable_entity }
+    if(@coords && @coords.city.casecmp(coin_entry_params[:city]) == 0 && @coords.state_code.casecmp(coin_entry_params[:state]) == 0)
+      mod_params = coin_entry_params;
+      mod_params[:city] = @coords.city;
+      mod_params[:state] = @coords.state_code;
+
+      @coin_entry = CoinEntry.new(mod_params)
+
+      respond_to do |format|
+        if @coin_entry.save
+          format.html { redirect_to '/' }
+          format.json { render :show, status: :created, location: @coin_entry }
+        else
+          format.html { render :new }
+          format.json { render json: @coin_entry.errors, status: :unprocessable_entity }
+        end
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {"city": ["Invalid"]}, status: :unprocessable_entity }
       end
     end
   end
