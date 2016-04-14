@@ -242,7 +242,7 @@ function refreshCities()
 }
 
 $(document).ready(function () {
-  $("#coin_entry_serial_number").bind('change', refreshCities);
+  $("#coin_entry_serial_number").change(refreshCities);
   refreshCities();
   $( "#created_at_picker" ).datepicker();
 
@@ -255,7 +255,7 @@ $(document).ready(function () {
 function mapCurrentCoin() {
   $.ajax({
     type: "GET",
-    url: "coin_entries/find_by_serial_number/" + $( "select[id=coin_entry_serial_number] option:selected" ).text(),
+    url: "coin_entries/find_by_serial_number/" + $( "input[id=coin_entry_serial_number]" )[0].value,
     success: update_entries
   });
 }
@@ -292,7 +292,7 @@ $(document).on("submit", "form", function (e) {
       <%= form_for(@coin_entry) do |f| %>
     <div class="field">
       <%= label(:coins, "Select Coin") %><br>
-      <%= collection_select(:coin_entry, :serial_number, Coin.all, :serial_number, :serial_number) %>
+      <%= f.text_field :serial_number, :id => "coin_entry_serial_number" %>
     </div>
 
     <div>

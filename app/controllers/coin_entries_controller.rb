@@ -29,6 +29,7 @@ class CoinEntriesController < ApplicationController
   # POST /coin_entries
   # POST /coin_entries.json
   def create
+    byebug
     @coords = coords_for_city(coin_entry_params);
 
     if(@coords && @coords.city.casecmp(coin_entry_params[:city]) == 0 && @coords.state_code.casecmp(coin_entry_params[:state]) == 0)
@@ -49,7 +50,7 @@ class CoinEntriesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.json { render json: {"city": ["Invalid"]}, status: :unprocessable_entity }
+        format.json { render json: "{'city': ['Invalid']}", status: :unprocessable_entity }
       end
     end
   end
