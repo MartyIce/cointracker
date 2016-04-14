@@ -117,6 +117,6 @@ class CoinEntriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def coin_entry_params
-      params.require(:coin_entry).permit(:city, :state, :country, :serial_number, :created_at)
+      params.require(:coin_entry).permit(:city, :state, :country, :serial_number, :created_at, :description)
     end
 end

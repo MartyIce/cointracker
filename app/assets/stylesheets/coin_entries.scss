@@ -20,12 +20,10 @@ $border-rad: 4px;
 div.edit_fields {
   float: left;
   width: 130px;
-  height: 200px;
 }
 div.cities {
   float: left;
   width: 200px;
-  height: 200px;
   overflow-y:scroll;
   overflow-x:hidden;
 }
@@ -50,6 +48,7 @@ div.section_box {
   @extend .outlined_box;
   margin: 10px;
   padding: 25px;
+  height: 340px;
 }
 ::-webkit-scrollbar {
     -webkit-appearance: none;
