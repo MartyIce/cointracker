@@ -29,10 +29,66 @@ class CoinEntriesController < ApplicationController
   # POST /coin_entries
   # POST /coin_entries.json
   def create
-    @coords = coords_for_city(coin_entry_params);
+    mod_params = coin_entry_params;
+    states = {
+      "Alabama" => "AL",
+      "Alaska" => "AK",
+      "Arizona" => "AZ",
+      "Arkansas" => "AR",
+      "California" => "CA",
+      "Colorado" => "CO",
+      "Connecticut" => "CT",
+      "Delaware" => "DE",
+      "Florida" => "FL",
+      "Georgia" => "GA",
+      "Hawaii" => "HI",
+      "Idaho" => "ID",
+      "Illinois" => "IL",
+      "Indiana" => "IN",
+      "Iowa" => "IA",
+      "Kansas" => "KS",
+      "Kentucky" => "KY",
+      "Louisiana" => "LA",
+      "Maine" => "ME",
+      "Maryland" => "MD",
+      "Massachusetts" => "MA",
+      "Michigan" => "MI",
+      "Minnesota" => "MN",
+      "Mississippi" => "MS",
+      "Missouri" => "MO",
+      "Montana" => "MT",
+      "Nebraska" => "NE",
+      "Nevada" => "NV",
+      "New Hampshire" => "NH",
+      "New Jersey" => "NJ",
+      "New Mexico" => "NM",
+      "New York" => "NY",
+      "North Carolina" => "NC",
+      "North Dakota" => "ND",
+      "Ohio" => "OH",
+      "Oklahoma" => "OK",
+      "Oregon" => "OR",
+      "Pennsylvania" => "PA",
+      "Rhode Island" => "RI",
+      "South Carolina" => "SC",
+      "South Dakota" => "SD",
+      "Tennessee" => "TN",
+      "Texas" => "TX",
+      "Utah" => "UT",
+      "Vermont" => "VT",
+      "Virginia" => "VA",
+      "Washington" => "WA",
+      "West Virginia" => "WV",
+      "Wisconsin" => "WI",
+      "Wyoming" => "WY"
+    }
 
-    if(@coords && @coords.city.casecmp(coin_entry_params[:city]) == 0 && @coords.state_code.casecmp(coin_entry_params[:state]) == 0)
-      mod_params = coin_entry_params;
+    if(!states.has_value?(mod_params[:state]))
+      mod_params[:state] = states[:state];
+    end
+
+    @coords = coords_for_city(mod_params);
+    if(@coords && @coords.city.casecmp(mod_params[:city]) == 0 && @coords.state_code.casecmp(mod_params[:state]) == 0)
       mod_params[:city] = @coords.city;
       mod_params[:state] = @coords.state_code;
 
@@ -87,66 +143,7 @@ class CoinEntriesController < ApplicationController
   end
 
   def coords_for_city(c) 
-
-    states = {
-      "Alabama" => "AL",
-      "Alaska" => "AK",
-      "Arizona" => "AZ",
-      "Arkansas" => "AR",
-      "California" => "CA",
-      "Colorado" => "CO",
-      "Connecticut" => "CT",
-      "Delaware" => "DE",
-      "Florida" => "FL",
-      "Georgia" => "GA",
-      "Hawaii" => "HI",
-      "Idaho" => "ID",
-      "Illinois" => "IL",
-      "Indiana" => "IN",
-      "Iowa" => "IA",
-      "Kansas" => "KS",
-      "Kentucky" => "KY",
-      "Louisiana" => "LA",
-      "Maine" => "ME",
-      "Maryland" => "MD",
-      "Massachusetts" => "MA",
-      "Michigan" => "MI",
-      "Minnesota" => "MN",
-      "Mississippi" => "MS",
-      "Missouri" => "MO",
-      "Montana" => "MT",
-      "Nebraska" => "NE",
-      "Nevada" => "NV",
-      "New Hampshire" => "NH",
-      "New Jersey" => "NJ",
-      "New Mexico" => "NM",
-      "New York" => "NY",
-      "North Carolina" => "NC",
-      "North Dakota" => "ND",
-      "Ohio" => "OH",
-      "Oklahoma" => "OK",
-      "Oregon" => "OR",
-      "Pennsylvania" => "PA",
-      "Rhode Island" => "RI",
-      "South Carolina" => "SC",
-      "South Dakota" => "SD",
-      "Tennessee" => "TN",
-      "Texas" => "TX",
-      "Utah" => "UT",
-      "Vermont" => "VT",
-      "Virginia" => "VA",
-      "Washington" => "WA",
-      "West Virginia" => "WV",
-      "Wisconsin" => "WI",
-      "Wyoming" => "WY"
-    }
-
-    state = c[:state];
-    if(!states.has_value?(state))
-      state = states[:state];
-    end
-
-    key = c[:city] + "," + state + "," + c[:country];
+    key = c[:city] + "," + c[:state] + "," + c[:country];
     Rails.cache.fetch(key, expires_in: 12.hours) do
       MultiGeocoder.geocode(key)
     end
