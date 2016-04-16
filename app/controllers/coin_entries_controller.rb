@@ -144,6 +144,7 @@ class CoinEntriesController < ApplicationController
     state = c[:state];
     if(!states.has_value?(state))
       state = states[:state];
+    end
 
     key = c[:city] + "," + state + "," + c[:country];
     Rails.cache.fetch(key, expires_in: 12.hours) do
