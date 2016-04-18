@@ -316,7 +316,7 @@ $(document).on("submit", "form", function (e) {
     </div>
       <div style="clear: both;"></div>
 
-      <%= form_for(@coin_entry, :html => { :style => 'width: 1600px; margin: 0px; float:left;' }) do |f| %>
+      <%= form_for(@coin_entry, :html => { :style => 'width: auto; margin: 0px; float:left;' }) do |f| %>
 
     <div>
     <div class="serial_number_container field">
@@ -327,7 +327,6 @@ $(document).on("submit", "form", function (e) {
       <div style="clear: both;"></div>
     <div id="coin_entries" class="cities section_box">
     </div>
-  </div>
 
     <div class="edit_fields section_box">    
         
@@ -359,6 +358,7 @@ $(document).on("submit", "form", function (e) {
     <div id="map-container" class="map section_box">
       <div id="map-canvas"></div>
     </div>
+  </div>
 
 
     <% end %>
