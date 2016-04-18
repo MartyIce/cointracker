@@ -89,7 +89,7 @@ class CoinEntriesController < ApplicationController
     end
 
     @coords = coords_for_city(mod_params);
-    if(@coords && @coords.city.casecmp(mod_params[:city]) == 0 && @coords.state_code.casecmp(mod_params[:state]) == 0)
+    if(@coords && @coords.city && @coords.state_code && @coords.city.casecmp(mod_params[:city]) == 0 && @coords.state_code.casecmp(mod_params[:state]) == 0)
       mod_params[:city] = @coords.city;
       mod_params[:state] = @coords.state_code;
 
@@ -145,9 +145,18 @@ class CoinEntriesController < ApplicationController
 
   def coords_for_city(c) 
     key = c[:city] + "," + c[:state] + "," + c[:country];
-    Rails.cache.fetch(key, expires_in: 12.hours) do
+    retVal = Rails.cache.fetch(key, expires_in: 12.hours) do
       MultiGeocoder.geocode(key)
     end
+
+    if(!retVal.city)
+      Rails.cache.delete(key);
+      retVal = Rails.cache.fetch(key, expires_in: 12.hours) do
+        MultiGeocoder.geocode(key)
+      end
+    end
+
+    return retVal;
   end
 
   def find_by_serial_number

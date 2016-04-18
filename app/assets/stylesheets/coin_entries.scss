@@ -14,6 +14,9 @@ div.geo_location {
 #map-canvas {
 	height: 200px;
 }
+#allcoins-map-canvas {
+  height: 200px;
+}
 
 input.edit_field {
   width: 90%;
@@ -37,7 +40,8 @@ div.map {
 }
 div.serial_number_container {
   @extend .outlined_box;
-  width: 434px;
+  float: left;
+  width: 250px;
   height: 40px;
   margin: 10px;
   padding: 10px;
@@ -53,6 +57,12 @@ div.section_box {
   margin: 10px;
   padding: 25px;
   height: 340px;
+}
+div.allcoins_section_box {
+  @extend .outlined_box;
+  margin: 10px;
+  padding: 15px;
+  height: 210px;
 }
 ::-webkit-scrollbar {
     -webkit-appearance: none;

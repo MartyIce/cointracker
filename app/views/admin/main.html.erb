@@ -3,29 +3,40 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-dateFormat/1.0/jquery.dateFormat.js"></script>
 <script>
 
-var map;
-var currentMap = "mapCurrentCoin";
-var marker;
-var allMarkers = [];
-var flightPath;
-var flightPlanCoords = [];
-var currentEntries = [];
+// current coin
+var currentCoinMap, marker, allMarkers = [], flightPath, flightPlanCoords = [], currentEntries = [];
+// all coins
+var allCoinsMap, allCoinsMarkers = [];
 
-function initMap() {
+function initMaps() {
   var latlng = new google.maps.LatLng(37.09024, -95.712891);
-  map = new google.maps.Map(document.getElementById('map-canvas'), {
+  currentCoinMap = new google.maps.Map(document.getElementById('map-canvas'), {
     zoom: 3,
     center: latlng,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
+  allCoinsMap = new google.maps.Map(document.getElementById('allcoins-map-canvas'), {
+    zoom: 3,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+  mapAllCoins();
 }
 function update_geo(coin_entries) {
   coin_entries.forEach(function(coin_entry) {
     var coords = {lat: coin_entry.lat, lng: coin_entry.lng};
     flightPlanCoords.push(coords);
-    createMarker(coin_entry, coords, map, coin_entry.city)
+    createMarker(coin_entry, coords, currentCoinMap, coin_entry.city, allMarkers, true)
   });
   updateFlightPath();
+}
+
+function update_allcoins_geo(coin_entries) {
+  coin_entries.forEach(function(coin_entry) {
+    var coords = {lat: coin_entry.lat, lng: coin_entry.lng};
+    marker = createMarker(coin_entry, coords, allCoinsMap, coin_entry.city, allCoinsMarkers, false)
+    marker.setMap(allCoinsMap);
+  });
 }
 
 function markerSelected(marker) {
@@ -40,7 +51,7 @@ function markerSelected(marker) {
   $('.' + classname).css('color', 'blue');
 }
 
-function createMarker(coin_entry, coords, map, label){
+function createMarker(coin_entry, coords, map, label, markers, addListener){
   marker = new google.maps.Marker({
     position: coords,
     map: map,
@@ -48,16 +59,19 @@ function createMarker(coin_entry, coords, map, label){
   });
   marker.coords = coords;
   marker.coin_entry = coin_entry
-  allMarkers.push(marker);
+  markers.push(marker);
 
-  marker.addListener('click', function() {
-    markerSelected(this);
-  });
+  if(addListener) {
+    marker.addListener('click', function() {
+      markerSelected(this);
+    });
+  }
+  return marker;
 }
 
 // Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
-  allMarkers.forEach(function(m) {
+function clearMarkers(markers, map) {
+  markers.forEach(function(m) {
     m.setMap(null);
   });
   flightPlanCoords = [];
@@ -65,19 +79,19 @@ function clearMarkers() {
 
 // Deletes all markers in the array by removing references to them.
 function deleteMarkers() {
-  clearMarkers();
+  clearMarkers(allMarkers, currentCoinMap);
   allMarkers = [];
 }
-function findMatchingMarkersByClassname(classname) {
-  var match = allMarkers.filter(function (entry) 
+function findMatchingMarkersByClassname(classname, markers) {
+  var match = markers.filter(function (entry) 
     { 
       return classname === getEntryClassname(entry.coin_entry); 
     }
   );
   return match;
 }
-function findMatchingMarker(currentEntry) {
-  var match = allMarkers.filter(function (entry) 
+function findMatchingMarker(currentEntry, markers) {
+  var match = markers.filter(function (entry) 
     { 
       var ce1 = entry.coin_entry;
       var ce2 = currentEntry;
@@ -110,14 +124,14 @@ function highlightMarker(classname) {
   allMarkers.forEach(function(m) {
     m.setAnimation(null);
   });
-  var markers = findMatchingMarkersByClassname(classname);
+  var markers = findMatchingMarkersByClassname(classname, allMarkers);
   if(markers.length > 0)
     markerSelected(markers[0])
 }
 function update_entries(data) {
 
   currentEntries = data;
-  clearMarkers();
+  clearMarkers(allMarkers, currentCoinMap);
   if(flightPath)
     flightPath.setMap(null);
 
@@ -132,39 +146,18 @@ function update_entries(data) {
 
       var classname = getEntryClassname(currentEntry);
 
-      switch(currentMap) {
-        case "mapCurrentCoin":
-          table.append( '<tr ' +
-            'onclick="highlightMarker(\'' + 
-            classname + 
-            '\')" class="cityname ' + 
-            classname + 
-            '"><td align="right">' + 
-            location +
-            ':</td><td>' + 
-            $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
-            '</td></tr>' );
-          break;
-        case "mapAllCoins":
-          table.append( '<tr ' + 
-            'onclick="highlightMarker(\'' + 
-            classname + 
-            '\')" class="cityname ' + 
-            classname + '"><td align="right">' + 
-            currentEntry.serial_number +
-            ':</td><td>' + 
-            $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
-            '</td></tr>' );
-          table.append( '<tr ' +
-            'onclick="highlightMarker(\'' + 
-            classname + 
-            '\')" class="cityname ' + 
-            classname + '"><td align="right"></td><td>' + 
-            location +
-            '</td></tr>' );
-          break;
-      }
-      var currentMarker = findMatchingMarker(currentEntry);
+      table.append( '<tr ' +
+        'onclick="highlightMarker(\'' + 
+        classname + 
+        '\')" class="cityname ' + 
+        classname + 
+        '"><td align="right">' + 
+        location +
+        ':</td><td>' + 
+        $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
+        '</td></tr>' );
+
+      var currentMarker = findMatchingMarker(currentEntry, allMarkers);
       if(currentMarker === null)
       {
         var cityToRetrieve = citiesToRetrieve.filter(function (entry) 
@@ -192,44 +185,61 @@ function update_entries(data) {
 
 };
 
-function updateFlightPath() {
-  if(currentMap === 'mapCurrentCoin')
-  {
-    flightPath = new google.maps.Polyline({
-      path: flightPlanCoords,
-      geodesic: false,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
-    });
+function update_allcoins_entries(data) {
 
-    flightPath.setMap(map);
-    
-  }
+  currentAllCoinsEntries = data;
+  clearMarkers(allCoinsMarkers, allCoinsMap);
 
-  switch(currentMap) {
-    case "mapCurrentCoin":
-    var index = 1;
-      allMarkers.forEach(function(m) {
-        m.label = '';
-      });
-      currentEntries.forEach(function(entry) {
-      var marker = findMatchingMarker(entry)
-      if(marker) {
-        if(marker.label === '')
-          marker.label = index.toString();
-        marker.setMap(map);
-        index++;
+  var citiesToRetrieve = [];
+  for(i=0; i<currentAllCoinsEntries.length; i++){
+      var currentEntry = currentAllCoinsEntries[i];
+      var currentMarker = findMatchingMarker(currentEntry, allCoinsMarkers);
+      if(currentMarker === null)
+      {
+        var cityToRetrieve = citiesToRetrieve.filter(function (entry) 
+          { return entry.city === currentEntry.city && entry.state === currentEntry.state; });
+        if(cityToRetrieve.length == 0)
+          citiesToRetrieve.push(currentEntry);
       }
-    });
-      break;
-    case "mapAllCoins":
-      allMarkers.forEach(function(m) {
-        m.label = m.coin_entry.city;
-        m.setMap(map);
-      });
-      break;
+
   }
+
+  if(citiesToRetrieve.length > 0)
+    $.ajax({
+      type: "POST",
+      url: "coin_entries/location_update",
+      data: { "cities": citiesToRetrieve },
+      success: update_allcoins_geo
+    });
+  else
+    updateFlightPath();
+
+};
+
+function updateFlightPath() {
+  flightPath = new google.maps.Polyline({
+    path: flightPlanCoords,
+    geodesic: false,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+
+  flightPath.setMap(currentCoinMap);
+    
+  var index = 1;
+  allMarkers.forEach(function(m) {
+    m.label = '';
+  });
+  currentEntries.forEach(function(entry) {
+    var marker = findMatchingMarker(entry, allMarkers)
+    if(marker) {
+      if(marker.label === '')
+        marker.label = index.toString();
+      marker.setMap(currentCoinMap);
+      index++;
+    }
+  });
 
 }
 
@@ -238,7 +248,7 @@ function refreshCities()
   $("[name='coin_entry[city]']").val('');
   $("[name='coin_entry[state]']").val('');
   $("[name='coin_entry[description]']").val('');
-  window[currentMap]();
+  mapCurrentCoin();
   return true;
 }
 
@@ -246,12 +256,8 @@ $(document).ready(function () {
   $(".edit_fields :input").attr("disabled", true);
   $("#coin_entry_serial_number").change(refreshCities);
   refreshCities();
-  $( "#created_at_picker" ).datepicker();
+  $( "#created_at_picker" ).datepicker({ dateFormat: 'mm-dd-yy' });
 
-  $("input[name$='mapSelection']").click(function() {
-      currentMap = $(this).val();
-      window[currentMap]();
-  });
 });
 
 function mapCurrentCoin() {
@@ -278,7 +284,7 @@ function mapAllCoins() {
   $.ajax({
     type: "GET",
     url: "find_last_city_for_each",
-    success: update_entries
+    success: update_allcoins_entries
   });
 }
 
@@ -299,10 +305,16 @@ $(document).on("submit", "form", function (e) {
     return false; // prevents normal behaviour
 });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwDgeRGT4ZgucWWQSnlyOIo-Kbyy3gSC0&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCwDgeRGT4ZgucWWQSnlyOIo-Kbyy3gSC0&callback=initMaps"
     async defer></script>
 
 <h1>Got a Rock</h1>
+
+    <div id="allcoins-map-container" class="map allcoins_section_box">
+      All Coins:
+      <div id="allcoins-map-canvas"></div>
+    </div>
+      <div style="clear: both;"></div>
 
       <%= form_for(@coin_entry) do |f| %>
     <div class="serial_number_container field">
