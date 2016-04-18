@@ -316,14 +316,19 @@ $(document).on("submit", "form", function (e) {
     </div>
       <div style="clear: both;"></div>
 
-      <%= form_for(@coin_entry) do |f| %>
+      <%= form_for(@coin_entry, :html => { :style => 'width: 1600px; margin: 0px; float:left;' }) do |f| %>
+
+    <div>
     <div class="serial_number_container field">
       <%= label(:coins, "Enter Serial Number") %><br>
       <%= f.text_field :serial_number, :id => "coin_entry_serial_number" %>
       <span class="field" id="validation-errors-serial-number" style="display:none; color: red"></span>
     </div>
+      <div style="clear: both;"></div>
+    <div id="coin_entries" class="cities section_box">
+    </div>
+  </div>
 
-    <div>
     <div class="edit_fields section_box">    
         
         <div class="field" id="city">
@@ -350,15 +355,12 @@ $(document).on("submit", "form", function (e) {
           <%= f.submit %>
         </div>
       </div>
-    <% end %>
-
-    <div id="coin_entries" class="cities section_box">
-    </div>
 
     <div id="map-container" class="map section_box">
       <div id="map-canvas"></div>
     </div>
 
 
-      <div style="clear: both;"></div>
+    <% end %>
+
   </div>

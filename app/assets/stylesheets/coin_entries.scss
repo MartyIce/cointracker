@@ -38,6 +38,9 @@ div.map {
   float: left;
   width: 404px;
 }
+div.map-container {
+  float: left;
+}
 div.serial_number_container {
   @extend .outlined_box;
   float: left;
