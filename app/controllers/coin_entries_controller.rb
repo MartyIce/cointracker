@@ -93,6 +93,12 @@ class CoinEntriesController < ApplicationController
       mod_params[:city] = @coords.city;
       mod_params[:state] = @coords.state_code;
 
+      begin
+        mod_params["created_at"] = DateTime.strptime(mod_params["created_at"], "%m-%d-%Y" );
+      rescue => ex
+        mod_params["created_at"] = DateTime.now.to_date;
+      end
+
       @coin_entry = CoinEntry.new(mod_params)
 
       respond_to do |format|
