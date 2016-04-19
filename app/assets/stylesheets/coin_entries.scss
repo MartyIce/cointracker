@@ -12,7 +12,7 @@ div.geo_location {
 }
 
 #map-canvas {
-	height: 200px;
+	height: 400px;
 }
 #allcoins-map-canvas {
   height: 200px;
@@ -23,49 +23,56 @@ input.edit_field {
 }
 
 $border-rad: 4px;
-
-div.edit_fields {
-  float: left;
-  width: 130px;
-}
-div.cities {
-  float: left;
-  width: 200px;
-  overflow-y:scroll;
-  overflow-x:hidden;
-}
-div.map {
-  float: left;
-  width: 404px;
-}
-div.map-container {
+div.left_box {
+  width: 23%;
   float: left;
 }
 div.serial_number_container {
   @extend .outlined_box;
   float: left;
-  width: 250px;
+  width: 85%;
   height: 40px;
-  margin: 10px;
-  padding: 10px;
 }
+div.cities {
+  @extend .outlined_box;
+  float: left;
+  width: 85%;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  height: 340px;
+}
+div.edit_fields {
+  float: left;
+  width: 25%;
+  height: 394px;
+}
+div.small_map {
+  float: left;
+  width: 35%;
+  height: 394px;
+}
+div.map-container {
+  float: left;
+}
+
 div.outlined_box {
   border-radius: $border-rad $border-rad $border-rad $border-rad;
   -moz-border-radius: $border-rad $border-rad $border-rad $border-rad;
   -webkit-border-radius: $border-rad $border-rad $border-rad $border-rad;
   border: 2px solid #000000;
+  margin: 10px;
+  padding: 10px;
 }
 div.section_box {
   @extend .outlined_box;
   margin: 10px;
   padding: 25px;
-  height: 340px;
 }
 div.allcoins_section_box {
   @extend .outlined_box;
-  margin: 10px;
   padding: 15px;
   height: 210px;
+  width: 95%;
 }
 ::-webkit-scrollbar {
     -webkit-appearance: none;
