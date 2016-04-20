@@ -312,7 +312,9 @@ $(document).on("submit", "form", function (e) {
 <h1>Got a Rock</h1>
 
     <div id="allcoins-map-container" class="big_map allcoins_section_box">
-      All Coins:
+      <div style="margin: -4px 0px 8px 0px">
+      Where the Rocks Have Been:
+      </div>
       <div id="allcoins-map-canvas"></div>
     </div>
       <div style="clear: both;"></div>
@@ -349,7 +351,7 @@ $(document).on("submit", "form", function (e) {
       </div>
       <div class="field">
         <%= f.label(:description, "How'd You Get Your Rock? (optional)") %><br>
-        <%= f.text_area :description, cols: "18", rows: "6", class: 'edit_field'  %>
+        <%= f.text_area :description, rows: "6", class: 'edit_field'  %>
       </div>
       <div class="actions">
         <%= f.submit %>
