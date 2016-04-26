@@ -24,7 +24,9 @@ input.edit_field {
 textarea.edit_field {
   width: 90%;
 }
-
+span.back-of-rock {
+  font-size: 80%;
+}
 $border-rad: 4px;
 div.left_box {
   width: 23%;
@@ -34,7 +36,7 @@ div.serial_number_container {
   @extend .outlined_box;
   float: left;
   width: 85%;
-  height: 40px;
+  height: 55px;
 }
 div.cities {
   @extend .outlined_box;
@@ -42,7 +44,7 @@ div.cities {
   width: 85%;
   overflow-y:scroll;
   overflow-x:hidden;
-  height: 340px;
+  height: 325px;
 }
 div.edit_fields {
   float: left;
