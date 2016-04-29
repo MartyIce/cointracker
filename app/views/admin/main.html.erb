@@ -294,6 +294,7 @@ $(document).on("submit", "form", function (e) {
     var valuesToSubmit = $(this).serialize();
     $.ajax({
         type: "POST",
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         url: $(this).attr('action'), //sumbits it to the given url of the form
         data: valuesToSubmit,
         dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
