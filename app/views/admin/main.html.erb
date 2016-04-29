@@ -266,7 +266,7 @@ function mapCurrentCoin() {
   var entry = $( "input[id=coin_entry_serial_number]" )[0].value;
   if(entry) {
     var entryInt = parseInt(entry);
-    if(entry.length === 3 && entryInt > 0 && (entryInt <= 250 || entryInt == 711) {
+    if(entry.length === 3 && entryInt > 0 && (entryInt <= 250 || entryInt == 711)) {
       $(".edit_fields :input").attr("disabled", false);
       $.ajax({
         type: "GET",
