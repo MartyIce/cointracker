@@ -173,7 +173,7 @@ class CoinEntriesController < ApplicationController
     byCity = CoinEntry.find_by_sql "SELECT serial_number, max(id) as id from coin_entries group by serial_number"
     ids = []
     byCity.each do |bc|
-      if(bc.serial_number != nil)
+      if(bc.serial_number != nil && bc.serial_number != '711')
         ids.push(bc.id)
       end
     end
