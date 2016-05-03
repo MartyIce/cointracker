@@ -302,8 +302,11 @@ $(document).on("submit", "form", function (e) {
         beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
         url: $(this).attr('action'), //sumbits it to the given url of the form
         data: valuesToSubmit,
-        dataType: "JSON" // you want a difference between normal and ajax-calls, and json is standard
-    }).success(function(json){
+        dataType: "JSON",
+        xhrFields: {
+          withCredentials: true
+        }
+          }).success(function(json){
       refreshCities();
     }).error(function(json) {
       $("#validation-errors").show();
