@@ -5,6 +5,7 @@ class CoinEntriesController < ApplicationController
   include Geokit::Geocoders
 
   before_action :set_coin_entry, only: [:show, :edit, :update, :destroy], except: [:find_by_serial_number]
+  skip_before_filter :verify_authenticity_token
 
   # GET /coin_entries
   # GET /coin_entries.json
