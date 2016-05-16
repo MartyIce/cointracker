@@ -136,6 +136,8 @@ function update_entries(data) {
     flightPath.setMap(null);
 
   var table = $('<table></table>');
+  var storiesContainer = $('<table></table>');
+
   var citiesToRetrieve = [];
   for(i=0; i<currentEntries.length; i++){
       var currentEntry = currentEntries[i];
@@ -157,6 +159,12 @@ function update_entries(data) {
         $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
         '</td></tr>' );
 
+      storiesContainer.append( '<tr><td align="right">' + 
+        $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
+        ':</td><td>' + 
+        currentEntry.description +
+        '</td></tr>' );
+
       var currentMarker = findMatchingMarker(currentEntry, allMarkers);
       if(currentMarker === null)
       {
@@ -172,6 +180,7 @@ function update_entries(data) {
 
   }
   $('#coin_entries').html(table);
+  $('#stories_container').html(storiesContainer);
 
   if(citiesToRetrieve.length > 0)
     $.ajax({
@@ -376,5 +385,10 @@ $(document).on("submit", "form", function (e) {
     </div>
 
     <% end %>
+
+      <div style="clear: both;"></div>
+
+    <div id="stories_container" class="stories_section_box">
+    </div>
 
   </div>

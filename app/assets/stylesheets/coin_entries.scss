@@ -79,6 +79,12 @@ div.allcoins_section_box {
   height: 210px;
   width: 95%;
 }
+div.stories_section_box {
+  @extend .outlined_box;
+  padding: 15px;
+  height: 210px;
+  width: 95%;
+}
 ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px;

@@ -37,7 +37,8 @@ Coin.all.each do |c|
       :city => cities[arrayInd], 
       :state => states[arrayInd], 
       :country => 'USA',
-      :created_at => time_rand(Time.local(2016, 4, 1))
+      :created_at => time_rand(Time.local(2016, 4, 1)),
+      :description => "Well this one time I did blah blah blah, and then blah blah blah, and then blah blah blah, and then blah blah blah, and then blah blah blah!"
     )
 	end
 end
