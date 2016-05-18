@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   post 'coin_entries/location_update' => 'coin_entries#location_update'
   get 'coin_entries/find_by_serial_number/:id' => 'coin_entries#find_by_serial_number'
+  get '/find_all_coin_entries' => 'coin_entries#find_all'
   get '/find_last_city_for_each' => 'coin_entries#find_last_for_each'
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -128,6 +128,24 @@ function highlightMarker(classname) {
   if(markers.length > 0)
     markerSelected(markers[0])
 }
+function initialize_stories(data) {
+
+  currentEntries = data;
+  var storiesContainer = $('<table></table>');
+  for(i=0; i<currentEntries.length; i++){
+      var currentEntry = currentEntries[i];
+
+      var message = 'Coin #' + currentEntry.serial_number
+        + ' was logged at ' + currentEntry.city + ', ' + currentEntry.state 
+        + ' on ' + $.format.date(currentEntry.created_at, "MM/dd/yyyy");
+      if(currentEntry.description)
+        message += ' and they said “' + currentEntry.description + '"'
+      storiesContainer.append( '<tr><td>' + message + '</td></tr>');
+
+  }
+  $('#stories_container').html(storiesContainer);
+
+}
 function update_entries(data) {
 
   currentEntries = data;
@@ -136,7 +154,6 @@ function update_entries(data) {
     flightPath.setMap(null);
 
   var table = $('<table></table>');
-  var storiesContainer = $('<table></table>');
 
   var citiesToRetrieve = [];
   for(i=0; i<currentEntries.length; i++){
@@ -159,13 +176,6 @@ function update_entries(data) {
         $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
         '</td></tr>' );
 
-      var message = 'Coin #' + currentEntry.serial_number
-        + ' was logged at ' + currentEntry.city + ', ' + currentEntry.state 
-        + ' on ' + $.format.date(currentEntry.created_at, "MM/dd/yyyy");
-      if(currentEntry.description)
-        message += ' and they said “' + currentEntry.description + '"'
-      storiesContainer.append( '<tr><td>' + message + '</td></tr>');
-
       var currentMarker = findMatchingMarker(currentEntry, allMarkers);
       if(currentMarker === null)
       {
@@ -181,7 +191,8 @@ function update_entries(data) {
 
   }
   $('#coin_entries').html(table);
-  $('#stories_container').html(storiesContainer);
+
+  initialize_stories(data);
 
   if(citiesToRetrieve.length > 0)
     $.ajax({
@@ -273,6 +284,12 @@ $(document).ready(function () {
   $("#coin_entry_serial_number").change(refreshCities);
   refreshCities();
   $( "#created_at_picker" ).datepicker({ dateFormat: 'mm-dd-yy' });
+
+  $.ajax({
+    type: "GET",
+    url: "find_all_coin_entries",
+    success: initialize_stories
+  });
 
 });
 

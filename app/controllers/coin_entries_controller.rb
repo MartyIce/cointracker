@@ -4,7 +4,7 @@ class CoinEntriesController < ApplicationController
 
   include Geokit::Geocoders
 
-  before_action :set_coin_entry, only: [:show, :edit, :update, :destroy], except: [:find_by_serial_number]
+  before_action :set_coin_entry, only: [:show, :edit, :update, :destroy], except: [:find_by_serial_number, :find_all]
   skip_before_filter :verify_authenticity_token
 
   # GET /coin_entries
@@ -168,6 +168,10 @@ class CoinEntriesController < ApplicationController
 
   def find_by_serial_number
     render json: CoinEntry.where("serial_number=?", params[:id].to_i.to_s.rjust(3, '0')).sort_by{|c| c[:created_at]}
+  end
+
+  def find_all
+    render json: CoinEntry.all.sort_by{|c| c[:created_at]}
   end
 
   def find_last_for_each    
