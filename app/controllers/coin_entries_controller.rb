@@ -171,7 +171,7 @@ class CoinEntriesController < ApplicationController
   end
 
   def find_all
-    render json: CoinEntry.all.sort_by{|c| c[:created_at]}
+    render json: CoinEntry.find(:all, :conditions => ["id != 711"]).sort_by{|c| c[:created_at]}
   end
 
   def find_last_for_each    
