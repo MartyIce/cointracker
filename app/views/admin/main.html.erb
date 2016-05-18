@@ -159,11 +159,10 @@ function update_entries(data) {
         $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
         '</td></tr>' );
 
-      storiesContainer.append( '<tr><td align="right">' + 
-        $.format.date(currentEntry.created_at, "MM/dd/yyyy") +
-        ':</td><td>' + 
-        currentEntry.description +
-        '</td></tr>' );
+      storiesContainer.append( '<tr><td>Coin #' + currentEntry.serial_number
+        + ' was logged at ' + currentEntry.city + ', ' + currentEntry.state 
+        + ' on ' + $.format.date(currentEntry.created_at, "MM/dd/yyyy") 
+        + ' and they said “' + currentEntry.description + '”</td></tr>');
 
       var currentMarker = findMatchingMarker(currentEntry, allMarkers);
       if(currentMarker === null)
